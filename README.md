@@ -13,4 +13,6 @@ GitHub の PR の「Files changed」で diff を絞り込む Chrome 拡張です
 3. 「パッケージ化されていない拡張機能を読み込む」からこのフォルダを選ぶ
 
 private リポジトリで行数を集計するには、拡張のオプションで GitHub トークンを設定してください。
+トークンは対象リポジトリの「Pull requests: Read-only」だけを許可した Fine-grained token がおすすめです。
+トークンはこの端末の Chrome にだけ保存され、他の端末には同期されません。
 テストコードの判定ルールもオプションで変更できます。
