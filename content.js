@@ -3,7 +3,6 @@
 
   const state = {
     kind: 'all', // all | product | test
-    line: 'all', // all | add | del
     folders: new Set(), // 空なら全フォルダ
     testRegexes: DEFAULT_TEST_PATTERNS.map((p) => new RegExp(p)),
     token: '',
@@ -59,29 +58,6 @@
     return blocks;
   }
 
-  function lineType(el) {
-    const classes = [el.className, ...Array.from(el.querySelectorAll('*'), (c) => c.className)].join(' ');
-    if (/addition|-added|line-add/i.test(classes)) return 'add';
-    if (/deletion|-deleted|line-del|removed/i.test(classes)) return 'del';
-    const marker = (el.closest('[data-code-marker]') ?? el.querySelector('[data-code-marker]'))?.getAttribute('data-code-marker');
-    if (marker === '+') return 'add';
-    if (marker === '-') return 'del';
-    return 'ctx';
-  }
-
-  function isHiddenType(type) {
-    return (state.line === 'add' && type === 'del') || (state.line === 'del' && type === 'add');
-  }
-
-  // 左右分割表示では削除と追加が同じ行にあるので、セル単位で判定して隠す
-  function filterRow(row) {
-    const cells = Array.from(row.children).filter((c) => c.tagName === 'TD');
-    const types = cells.map((c) => lineType(c));
-    const isSplit = types.includes('add') && types.includes('del');
-    row.classList.toggle('pdf-hidden', !isSplit && isHiddenType(lineType(row)));
-    cells.forEach((cell, i) => cell.classList.toggle('pdf-blank', isSplit && isHiddenType(types[i])));
-  }
-
   function folderOf(path) {
     const i = path.lastIndexOf('/');
     return i < 0 ? '(root)' : path.slice(0, i);
@@ -104,7 +80,6 @@
   function applyFilter() {
     for (const { el, path } of fileBlocks()) {
       el.classList.toggle('pdf-hidden', !(matchesKind(path) && matchesFolder(path)));
-      el.querySelectorAll('tr').forEach(filterRow);
     }
   }
 
@@ -172,8 +147,6 @@
       </div>
       <div class="pdf-section"><div class="pdf-label">種類</div>
         ${seg('kind', [['all', 'すべて'], ['product', 'プロダクト'], ['test', 'テスト']])}</div>
-      <div class="pdf-section"><div class="pdf-label">行</div>
-        ${seg('line', [['all', 'すべて'], ['add', '+ のみ'], ['del', '− のみ']])}</div>
       <div class="pdf-section"><div class="pdf-label">フォルダ <button class="pdf-clear" style="float:right">クリア</button></div>
         <div class="pdf-folders">${folders
           .map((f) => {
