@@ -1,0 +1,45 @@
+#pdf-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  width: 300px;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--fgColor-default, #1f2328);
+  background: var(--bgColor-default, #fff);
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+#pdf-panel.pdf-collapsed .pdf-body { display: none; }
+#pdf-panel .pdf-head { display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+#pdf-panel .pdf-head button { border: none; background: none; cursor: pointer; color: inherit; }
+#pdf-panel .pdf-section { margin-top: 10px; }
+#pdf-panel .pdf-label { font-weight: 600; margin-bottom: 4px; }
+#pdf-panel .pdf-seg { display: flex; gap: 4px; }
+#pdf-panel .pdf-seg button {
+  flex: 1;
+  padding: 4px;
+  cursor: pointer;
+  color: inherit;
+  background: var(--bgColor-muted, #f6f8fa);
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+}
+#pdf-panel .pdf-seg button.pdf-on {
+  color: #fff;
+  background: var(--bgColor-accent-emphasis, #0969da);
+  border-color: transparent;
+}
+#pdf-panel table { width: 100%; border-collapse: collapse; }
+#pdf-panel td, #pdf-panel th { padding: 2px 4px; text-align: right; }
+#pdf-panel td:first-child, #pdf-panel th:first-child { text-align: left; }
+#pdf-panel .pdf-add { color: var(--fgColor-success, #1a7f37); }
+#pdf-panel .pdf-del { color: var(--fgColor-danger, #d1242f); }
+#pdf-panel .pdf-folders label { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#pdf-panel .pdf-note { margin-top: 6px; color: var(--fgColor-muted, #656d76); }
+
+.pdf-hidden { display: none !important; }
