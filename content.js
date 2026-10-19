@@ -257,9 +257,12 @@
     }, 300);
   });
 
-  chrome.storage.sync.get({ token: '', testPatterns: DEFAULT_TEST_PATTERNS.join('\n') }, (opts) => {
-    state.token = opts.token;
-    state.testRegexes = opts.testPatterns
+  Promise.all([
+    chrome.storage.local.get({ token: '' }),
+    chrome.storage.sync.get({ testPatterns: DEFAULT_TEST_PATTERNS.join('\n') }),
+  ]).then(([local, sync]) => {
+    state.token = local.token;
+    state.testRegexes = sync.testPatterns
       .split('\n')
       .map((p) => p.trim())
       .filter(Boolean)
