@@ -43,3 +43,5 @@
 #pdf-panel .pdf-note { margin-top: 6px; color: var(--fgColor-muted, #656d76); }
 
 .pdf-hidden { display: none !important; }
+/* 左右分割表示で片側だけ隠す。列がずれないよう display: none は使わない */
+.pdf-blank { visibility: hidden !important; }

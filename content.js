@@ -67,14 +67,27 @@
     return blocks;
   }
 
-  function lineType(row) {
-    const classes = [row.className, ...Array.from(row.querySelectorAll('td'), (td) => td.className)].join(' ');
+  function lineType(el) {
+    const classes = [el.className, ...Array.from(el.querySelectorAll('*'), (c) => c.className)].join(' ');
     if (/addition|-added|line-add/i.test(classes)) return 'add';
     if (/deletion|-deleted|line-del|removed/i.test(classes)) return 'del';
-    const marker = row.querySelector('[data-code-marker]')?.getAttribute('data-code-marker');
+    const marker = (el.closest('[data-code-marker]') ?? el.querySelector('[data-code-marker]'))?.getAttribute('data-code-marker');
     if (marker === '+') return 'add';
     if (marker === '-') return 'del';
     return 'ctx';
+  }
+
+  function isHiddenType(type) {
+    return (state.line === 'add' && type === 'del') || (state.line === 'del' && type === 'add');
+  }
+
+  // 左右分割表示では削除と追加が同じ行にあるので、セル単位で判定して隠す
+  function filterRow(row) {
+    const cells = Array.from(row.children).filter((c) => c.tagName === 'TD');
+    const types = cells.map((c) => lineType(c));
+    const isSplit = types.includes('add') && types.includes('del');
+    row.classList.toggle('pdf-hidden', !isSplit && isHiddenType(lineType(row)));
+    cells.forEach((cell, i) => cell.classList.toggle('pdf-blank', isSplit && isHiddenType(types[i])));
   }
 
   function folderOf(path) {
@@ -99,11 +112,7 @@
   function applyFilter() {
     for (const { el, path } of fileBlocks()) {
       el.classList.toggle('pdf-hidden', !(matchesKind(path) && matchesFolder(path)));
-      el.querySelectorAll('tr').forEach((row) => {
-        const t = lineType(row);
-        const hide = (state.line === 'add' && t === 'del') || (state.line === 'del' && t === 'add');
-        row.classList.toggle('pdf-hidden', hide);
-      });
+      el.querySelectorAll('tr').forEach(filterRow);
     }
   }
 
