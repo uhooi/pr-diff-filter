@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "PR Diff Filter",
+  "version": "0.1.0",
+  "description": "GitHub の PR の diff をプロダクトコード/テストコード、追加/削除、フォルダで絞り込む",
+  "permissions": ["storage"],
+  "host_permissions": ["https://api.github.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "options.html"
+}
