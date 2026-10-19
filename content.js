@@ -233,7 +233,10 @@
     state.folders.clear();
     update();
     try {
-      state.apiFiles = await fetchPrFiles(pr);
+      const files = await fetchPrFiles(pr);
+      // 取得中に別の PR へ移動していたら結果を捨てる
+      if (state.prKey !== key) return;
+      state.apiFiles = files;
     } catch (e) {
       console.warn('[PR Diff Filter]', e);
     }
